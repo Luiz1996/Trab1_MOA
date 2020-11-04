@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class Console {
 
-    public final static void cleanDisplay() {
+    public static void cleanDisplay() {
         System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
     }
 
