@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         List<City> myCities = new ArrayList<>();
         File fl = new File();
         CityControle cCtrl = new CityControle();
@@ -25,36 +25,40 @@ public class Main {
             switch (option) {
                 case 1:
                     if(myCities.size() > 0){
-                        JOptionPane.showMessageDialog(null, "Para reimportar as cidades, use a Opção 5 e resete as informações.", "Falha ao importar cidades", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Para reimportar as cidades, use a Opção 5 e resete as informações.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }else{
                         myCities = fl.importCities(myCities);
-                        JOptionPane.showMessageDialog(null, "O arquivo foi importado com sucesso!", "Lendo arquivo", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "O arquivo foi importado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     }
                     break;
                 case 2:
                     if(myCities.size() > 0){
                         cCtrl.printCities(myCities);
                     }else{
-                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha ao imprimir", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 3:
                     if(myCities.size() > 0){
                         pcv.nearestNeighbor(myCities);
                     }else{
-                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha ao calcular a rota", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 4:
                     if(myCities.size() > 0){
                         pcv.closestInsertion(myCities);
                     }else{
-                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha ao realizar inserção", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 5:
                     myCities = new ArrayList<>();
                     JOptionPane.showMessageDialog(null, "As cidades foram apagadas com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    break;
+                case 6:
+                    cCtrl.makeCitiesFile();
+                    Console.cleanDisplay();
                     break;
                 default:
                     System.out.println("Opção inválida!");
@@ -62,7 +66,6 @@ public class Main {
             }
             option = Console.showMenu();
         }
-        //forçando chamada do garbage collector
         System.gc();
     }
 }
