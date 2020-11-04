@@ -1,9 +1,6 @@
 package br.uem.din.moa.Console;
 
-import java.awt.*;
-import java.awt.event.*;
 import java.util.Scanner;
-import javax.swing.JOptionPane;
 
 public class Console {
 
