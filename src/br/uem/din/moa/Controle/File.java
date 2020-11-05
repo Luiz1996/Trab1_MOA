@@ -11,7 +11,7 @@ import java.util.List;
 public class File {
 
     public List<City> importCities(List<City> myCities){
-        String pathArq = null;
+        String pathArq;
         City actualCity = new City();
 
         JFileChooser file = new JFileChooser();
@@ -21,8 +21,8 @@ public class File {
         try{
             pathArq = file.getSelectedFile().toString().trim();
         }catch (Exception e){
-            JOptionPane.showMessageDialog(null, "Nenhum arquivo foi selecionado ou arquivo inválido.\n\nPrograma abortado!", "Falha ao abrir arquivo texto", JOptionPane.ERROR_MESSAGE);
-            System.exit(0);
+            JOptionPane.showMessageDialog(null, "Nenhum arquivo foi selecionado ou arquivo inválido.", "Falha", JOptionPane.ERROR_MESSAGE);
+            return myCities;
         }
 
         //abrindo arquivo para leitura
@@ -59,6 +59,7 @@ public class File {
             JOptionPane.showMessageDialog(null, "Falha ao ler arquivo!\nPrograma Abortado\nErro: ".concat(e.getMessage().trim()), "Falha ao ler arquivo", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
+        JOptionPane.showMessageDialog(null, "O arquivo foi importado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         return myCities;
     }
 }

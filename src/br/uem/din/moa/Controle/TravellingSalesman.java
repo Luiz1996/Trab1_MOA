@@ -5,12 +5,17 @@ import br.uem.din.moa.Model.City;
 import java.util.List;
 
 public class TravellingSalesman {
+    int[] route ;
+    int totalDistance = 0;
 
-    public void nearestNeighbor(List<City> myCities){
+
+    public void nearestNeighborHeuristic_TSP(List<City> myCities){
         //variáveis auxiliares
         int actual = 0;
-        int[] route =  new int[(myCities.size() + 1)];
-        int totalDistance = 0;
+        route =  new int[(myCities.size() + 1)];
+        totalDistance = 0;
+
+        System.out.println("Iniciando rota utilizando a Heurística do Vizinho Mais Próximo...");
 
         //percorrendo todas as cidades
         for(int allNeighbors = 1; allNeighbors < (route.length - 1); allNeighbors++){
@@ -80,7 +85,19 @@ public class TravellingSalesman {
         System.out.print("]\n");
     }
 
-    public void closestInsertion(List<City> myCities){
-        System.out.println("inserção mais proxima");
+    public void nearestInsertionHeuristic_TSP(List<City> myCities){
+        //variáveis auxiliares
+        route =  new int[(myCities.size() + 1)];
+        totalDistance = 0;
+
+        System.out.println("Iniciando rota utilizando a Heurística da Inserção Mais Próxima...");
+        System.out.println("O ciclo inicial conterá as cidades: C000, C001 e C002.");
+
+        /*inicio*/
+
+        /*fim*/
+
+        //Imprimindo resultados
+        printRoute(route, totalDistance);
     }
 }

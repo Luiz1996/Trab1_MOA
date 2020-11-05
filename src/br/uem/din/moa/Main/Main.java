@@ -17,7 +17,7 @@ public class Main {
         List<City> myCities = new ArrayList<>();
         File fl = new File();
         CityControle cCtrl = new CityControle();
-        TravellingSalesman pcv = new TravellingSalesman();
+        TravellingSalesman tsp = new TravellingSalesman();
 
         int option = Console.showMenu();
         while (option != 0) {
@@ -28,7 +28,6 @@ public class Main {
                         JOptionPane.showMessageDialog(null, "Para reimportar as cidades, use a Opção 5 e resete as informações.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }else{
                         myCities = fl.importCities(myCities);
-                        JOptionPane.showMessageDialog(null, "O arquivo foi importado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     }
                     break;
                 case 2:
@@ -40,14 +39,14 @@ public class Main {
                     break;
                 case 3:
                     if(myCities.size() > 0){
-                        pcv.nearestNeighbor(myCities);
+                        tsp.nearestNeighborHeuristic_TSP(myCities);
                     }else{
                         JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 4:
                     if(myCities.size() > 0){
-                        pcv.closestInsertion(myCities);
+                        tsp.nearestInsertionHeuristic_TSP(myCities);
                     }else{
                         JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }

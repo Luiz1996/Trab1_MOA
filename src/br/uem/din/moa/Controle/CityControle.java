@@ -105,7 +105,7 @@ public class CityControle {
         for(int  i = 0; i < numberOfCities; i++){
             for(int j = (i + 1); j < numberOfCities; j++){
                 if(i != j){
-                    distanceRandom = random.nextInt(maxDistanceValue);
+                    distanceRandom = random.nextInt((maxDistanceValue + 1));
                     matriz[i][j] = distanceRandom;
                     matriz[j][i] = distanceRandom;
                 }else{
