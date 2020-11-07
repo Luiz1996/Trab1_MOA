@@ -5,7 +5,7 @@ import java.util.Objects;
 public class Route {
     private int initialVertex;
     private int vertexDistances;
-    private int finalVertec;
+    private int finalVertex;
 
     public Route(){}
 
@@ -25,12 +25,12 @@ public class Route {
         this.vertexDistances = vertexDistances;
     }
 
-    public int getFinalVertec() {
-        return finalVertec;
+    public int getFinalVertex() {
+        return finalVertex;
     }
 
-    public void setFinalVertec(int finalVertec) {
-        this.finalVertec = finalVertec;
+    public void setFinalVertex(int finalVertec) {
+        this.finalVertex = finalVertec;
     }
 
     @Override
@@ -40,11 +40,11 @@ public class Route {
         Route route = (Route) o;
         return initialVertex == route.initialVertex &&
                 vertexDistances == route.vertexDistances &&
-                finalVertec == route.finalVertec;
+                finalVertex == route.finalVertex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(initialVertex, vertexDistances, finalVertec);
+        return Objects.hash(initialVertex, vertexDistances, finalVertex);
     }
 }
