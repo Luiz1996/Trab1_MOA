@@ -12,15 +12,20 @@ public class TravellingSalesman {
     final int MIL = 1000;
     final int DEZ_MIL = 10000;
     int totalDistance;
+    long initTime;
+    long finalTime;
+    long timeToSecond;
 
     //heurística do vizinho mais próximo
     public void nearestNeighborHeuristic_TSP(List<City> myCities) {
+        System.out.println("Iniciando rota utilizando a Heurística do Vizinho Mais Próximo...");
+
+        initTime = System.currentTimeMillis();
+
         //variáveis auxiliares
         totalDistance = 0;
         int actual = 0;
         int[] routeTemp = new int[(myCities.size() + 1)];
-
-        System.out.println("Iniciando rota utilizando a Heurística do Vizinho Mais Próximo...");
 
         //percorrendo todas as cidades
         for (int allNeighbors = 1; allNeighbors < (routeTemp.length - 1); allNeighbors++) {
@@ -37,8 +42,7 @@ public class TravellingSalesman {
 
                 if ((notExistsOnTheRoute(routeTemp, currentNeighbor)) &&
                         (actualDistance > 0) &&
-                        (actualDistance < bestDistance))
-                {
+                        (actualDistance < bestDistance)) {
                     bestNeighbor = currentNeighbor;
                     bestDistance = actualDistance;
                 }
@@ -49,13 +53,17 @@ public class TravellingSalesman {
             routeTemp[allNeighbors] = actual;
         }
 
+        //imprimindo tempo de execução
+        finalTime = System.currentTimeMillis();
+        timeToSecond = ((finalTime - initTime) / 1000);
+
         //O trecho abaixo servirá somente para seguirmos um mesmo padrão de representação e impressão de rotas
         //Note que para o Vizinho Mais Próximo, todas as iterações e alimentação de informações foram num vetor[int] e não
         //em um List<Route>, a ideia é seguir o padrão de List<Route>
         List<Route> myRoute = buildRoute(routeTemp, myCities);
 
         //Imprimindo resultados
-        printRoute_TSP(myRoute);
+        printRoute_TSP(myRoute, timeToSecond);
     }
 
     private List<Route> buildRoute(int[] routeTemp, List<City> myCities) {
@@ -89,11 +97,16 @@ public class TravellingSalesman {
 
     //heurística da inserção mais próxima
     public void nearestInsertionHeuristic_TSP(List<City> myCities) {
-        //variáveis auxiliares
+        System.out.println("Iniciando rota utilizando a Heurística da Inserção Mais Próxima...");
+        System.out.println("O ciclo hamiltoniano inicial conterá as cidades C000, C001 e C002.");
+
+        initTime = System.currentTimeMillis();
+
+        //declarando vetor auxiliar de rota
         totalDistance = 0;
         int remainingCities = (myCities.size() - 3);
-        int indexOfCitiesOnRoute;
         int[] citiesOnRoute = new int[myCities.size()];
+        citiesOnRoute[0] = -1;
         List<Route> myRoute;
 
         //inicializando ciclo hamiltoniano com os três primeiros vértices
@@ -101,10 +114,6 @@ public class TravellingSalesman {
         citiesOnRoute[0] = 0;
         citiesOnRoute[1] = 1;
         citiesOnRoute[2] = 2;
-        indexOfCitiesOnRoute = 3;
-
-        System.out.println("Iniciando rota utilizando a Heurística da Inserção Mais Próxima...");
-        System.out.println("O ciclo hamiltoniano inicial conterá as cidades C000, C001 e C002.");
 
         //este for realizará iterações até que todas as cidades sejam inseridas na rota
         for (int newCity = 0; newCity < remainingCities; newCity++) {
@@ -118,9 +127,8 @@ public class TravellingSalesman {
 
                 //este for representa a cidade atual, tem como finalidade validar se o mesmo já está na rota e se a distância satisfaz as condições mínimas
                 for (int actualCity = 0; actualCity < myCities.size(); actualCity++) {
-
                     //validando se o novo vértice deve ou não pertencer à rota
-                    if ((notExistsOnTheRoute(citiesOnRoute, actualCity)) &&
+                    if ((citiesOnRoute[actualCity] != actualCity) &&
                             (myCities.get(actualCity).getDistancias().get(route.getFinalVertex()) < actualDistance)) {
 
                         //setando informações atualizadas
@@ -129,12 +137,12 @@ public class TravellingSalesman {
                         auxiliaryVertex = route.getFinalVertex();
                         newVertexOnTheRoute = actualCity;
                     }
+
                 }
             }
 
             //atualizando variáveis
-            citiesOnRoute[indexOfCitiesOnRoute] = newVertexOnTheRoute;
-            indexOfCitiesOnRoute++;
+            citiesOnRoute[newVertexOnTheRoute] = newVertexOnTheRoute;
 
             //obtendo o vertice a ser atualizado, sabemos que a partir dele tudo precisa ser reposicionado
             int indexToBeChanged = returnsIndexToBeChanged(myRoute, nearestVertex, auxiliaryVertex);
@@ -158,8 +166,13 @@ public class TravellingSalesman {
             }
             myRoute.add(rt);
         }
+
+        //imprimindo tempo de execução
+        finalTime = System.currentTimeMillis();
+        timeToSecond = ((finalTime - initTime) / 1000);
+
         //Imprimindo resultados
-        printRoute_TSP(myRoute);
+        printRoute_TSP(myRoute, timeToSecond);
     }
 
     //este método é responsável por retornar o primeiro índice a ser atualizado, dele em diante todas serão alterados ou reposicionados(deslocamento para direita)
@@ -201,7 +214,7 @@ public class TravellingSalesman {
     }
 
     //imprimindo a rota com a formatação adequada
-    private void printRoute_TSP(List<Route> myRoute) {
+    private void printRoute_TSP(List<Route> myRoute, long timeToSecond) {
         System.out.println("Rota realizada.: ");
 
         System.out.println("\t\t\t\t\t+----------------------+");
@@ -240,5 +253,6 @@ public class TravellingSalesman {
         }
         System.out.println("\t\t\t\t\t+----------------------+");
         System.out.println("Distância Total: " + totalDistance);
+        System.out.println("Tempo de execução em segundos: " + timeToSecond + "s.");
     }
 }

@@ -64,7 +64,6 @@ public class CityControle {
     }
 
     public void makeCitiesFile() throws IOException {
-
         input = new Scanner(System.in);
         int numberOfCities;
         int maxDistanceValue;
