@@ -114,7 +114,7 @@ public class TravellingSalesman {
                 for (int actualCity = 3; actualCity < myCities.size(); actualCity++) {
 
                     //validando se a nova cidade deve ou não pertencer à rota
-                    if ((citiesOnRoute[actualCity] != actualCity) &&
+                    if ((citiesOnRoute[actualCity] != actualCity/*Validando se a cidade já não existe na rota*/) &&
                             (myCities.get(actualCity).getDistancias().get(route.getFinalVertex()) < actualDistance)) {
 
                         //setando informações atualizadas
