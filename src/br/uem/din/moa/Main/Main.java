@@ -46,7 +46,11 @@ public class Main {
                     break;
                 case 4:
                     if(myCities.size() > 0){
-                        tsp.nearestInsertionHeuristic_TSP(myCities);
+                        if(myCities.size() > 2){
+                            tsp.nearestInsertionHeuristic_TSP(myCities);
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Para gerar o ciclo Hamiltoniano inicial, o arquivo deve conter ao menos 3 cidades!", "Falha", JOptionPane.ERROR_MESSAGE);
+                        }
                     }else{
                         JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
@@ -56,7 +60,7 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "As cidades foram apagadas com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 6:
-                    cCtrl.makeCitiesFile();
+                    fl.makeCitiesFile();
                     Console.cleanDisplay();
                     break;
                 default:
@@ -65,6 +69,5 @@ public class Main {
             }
             option = Console.showMenu();
         }
-        System.gc();
     }
 }

@@ -19,16 +19,25 @@ public class TravellingSalesman {
     //heurística do vizinho mais próximo
     public void nearestNeighborHeuristic_TSP(List<City> myCities) {
         System.out.println("Iniciando rota utilizando a Heurística do Vizinho Mais Próximo...");
+        System.out.println("A primeira cidade a entrar na rota será a C000.");
 
         initTime = System.currentTimeMillis();
 
         //variáveis auxiliares
         totalDistance = 0;
         int actual = 0;
-        int[] routeTemp = new int[(myCities.size() + 1)];
+        int lastPosition;
+        int[] citiesOnRoute = new int[(myCities.size() + 1)];
+        List<Route> myRoute = new ArrayList<>();
+        Route rt = new Route();
+
+        //iniciando rota
+        rt.setInitialVertex(0);
+        myRoute.add(rt);
 
         //percorrendo todas as cidades
-        for (int allNeighbors = 1; allNeighbors < (routeTemp.length - 1); allNeighbors++) {
+        for (int allNeighbors = 1; allNeighbors < (citiesOnRoute.length - 1); allNeighbors++) {
+            lastPosition = (myRoute.size() - 1);
             //possui todos os vizinhos da cidade atual, partindo da cidade C000
             List<Integer> neighbors = myCities.get(actual).getDistancias();
 
@@ -40,7 +49,7 @@ public class TravellingSalesman {
             for (int currentNeighbor = 0; currentNeighbor < neighbors.size(); currentNeighbor++) {
                 int actualDistance = neighbors.get(currentNeighbor);
 
-                if ((notExistsOnTheRoute(routeTemp, currentNeighbor)) &&
+                if ((citiesOnRoute[currentNeighbor] != currentNeighbor/*Validando se a cidade já não existe na rota*/) &&
                         (actualDistance > 0) &&
                         (actualDistance < bestDistance)) {
                     bestNeighbor = currentNeighbor;
@@ -50,49 +59,27 @@ public class TravellingSalesman {
 
             //atualizando informações
             actual = bestNeighbor;
-            routeTemp[allNeighbors] = actual;
+            citiesOnRoute[actual] = actual;
+            myRoute.get(lastPosition).setFinalVertex(actual);
+            myRoute.get(lastPosition).setVertexDistances(myCities.get(actual).getDistancias().get(myRoute.get(lastPosition).getInitialVertex()));
+
+            //incluindo nova cidade na rota
+            rt = new Route();
+            rt.setInitialVertex(actual);
+            myRoute.add(rt);
         }
+
+        //terminando de setar informações na última cidade da rota
+        lastPosition = (myRoute.size() - 1);
+        myRoute.get(lastPosition).setFinalVertex(0);
+        myRoute.get(lastPosition).setVertexDistances(myCities.get(myRoute.get(lastPosition).getFinalVertex()).getDistancias().get(myRoute.get(lastPosition).getInitialVertex()));
 
         //imprimindo tempo de execução
         finalTime = System.currentTimeMillis();
         timeToSecond = ((finalTime - initTime) / 1000);
 
-        //O trecho abaixo servirá somente para seguirmos um mesmo padrão de representação e impressão de rotas
-        //Note que para o Vizinho Mais Próximo, todas as iterações e alimentação de informações foram num vetor[int] e não
-        //em um List<Route>, a ideia é seguir o padrão de List<Route>
-        List<Route> myRoute = buildRoute(routeTemp, myCities);
-
         //Imprimindo resultados
         printRoute_TSP(myRoute, timeToSecond);
-    }
-
-    private List<Route> buildRoute(int[] routeTemp, List<City> myCities) {
-        List<Route> myRoute = new ArrayList<>();
-
-        for (int i = 0; i < (routeTemp.length - 1); i++) {
-            Route rt = new Route();
-
-            rt.setInitialVertex(routeTemp[i]);
-            if (i == ((routeTemp.length - 1) - 1)) {
-                rt.setVertexDistances(myCities.get(routeTemp[i]).getDistancias().get(0));
-                rt.setFinalVertex(0);
-            } else {
-                rt.setVertexDistances(myCities.get(routeTemp[i]).getDistancias().get(routeTemp[(i + 1)]));
-                rt.setFinalVertex(routeTemp[(i + 1)]);
-            }
-            myRoute.add(rt);
-        }
-
-        return myRoute;
-    }
-
-    //método responsável por validar se uma determinada cidade já existe na rota
-    private boolean notExistsOnTheRoute(int[] route, int actualCity) {
-        for (int i : route) {
-            if (i == actualCity)
-                return false;
-        }
-        return true;
     }
 
     //heurística da inserção mais próxima
@@ -110,10 +97,7 @@ public class TravellingSalesman {
         List<Route> myRoute;
 
         //inicializando ciclo hamiltoniano com os três primeiros vértices
-        myRoute = startRoute_C000_C001_C002(myCities);
-        citiesOnRoute[0] = 0;
-        citiesOnRoute[1] = 1;
-        citiesOnRoute[2] = 2;
+        myRoute = startRoute_C000_C001_C002(myCities, citiesOnRoute);
 
         //este for realizará iterações até que todas as cidades sejam inseridas na rota
         for (int newCity = 0; newCity < remainingCities; newCity++) {
@@ -126,8 +110,10 @@ public class TravellingSalesman {
             for (Route route : myRoute) {
 
                 //este for representa a cidade atual, tem como finalidade validar se o mesmo já está na rota e se a distância satisfaz as condições mínimas
-                for (int actualCity = 0; actualCity < myCities.size(); actualCity++) {
-                    //validando se o novo vértice deve ou não pertencer à rota
+                //pula os índices 0, 1 e 2 pois estes ja estão no ciclo hamiltoniano inicial
+                for (int actualCity = 3; actualCity < myCities.size(); actualCity++) {
+
+                    //validando se a nova cidade deve ou não pertencer à rota
                     if ((citiesOnRoute[actualCity] != actualCity) &&
                             (myCities.get(actualCity).getDistancias().get(route.getFinalVertex()) < actualDistance)) {
 
@@ -137,7 +123,6 @@ public class TravellingSalesman {
                         auxiliaryVertex = route.getFinalVertex();
                         newVertexOnTheRoute = actualCity;
                     }
-
                 }
             }
 
@@ -176,13 +161,12 @@ public class TravellingSalesman {
     }
 
     //este método é responsável por retornar o primeiro índice a ser atualizado, dele em diante todas serão alterados ou reposicionados(deslocamento para direita)
+    //fazendo um for iterando sobre todas as rotas acabou deixando a performance melhor do que ficar atribuindo o índice todas vez que uma distância fosse melhor
     private int returnsIndexToBeChanged(List<Route> myRoute, int nearestVertex, int auxiliaryVertex) {
         int findIndex = 0;
-
         //percorre todas as rotas encontrando uma aresta que satisfaça as condições de igualdade entre vertice inicial e final
         for (int index = 0; index < myRoute.size(); index++) {
-            if (((myRoute.get(index).getInitialVertex() == nearestVertex) && (myRoute.get(index).getFinalVertex() == auxiliaryVertex)) ||
-                    ((myRoute.get(index).getFinalVertex() == nearestVertex) && (myRoute.get(index).getInitialVertex() == auxiliaryVertex))) {
+            if ((myRoute.get(index).getInitialVertex() == nearestVertex && myRoute.get(index).getFinalVertex() == auxiliaryVertex)) {
                 findIndex = index;
             }
         }
@@ -190,13 +174,14 @@ public class TravellingSalesman {
     }
 
     //método responsável por iniciar o ciclo contendo as cidades C000, C001 e C002
-    private List<Route> startRoute_C000_C001_C002(List<City> myCities) {
+    private List<Route> startRoute_C000_C001_C002(List<City> myCities, int[] citiesOnRoute) {
         List<Route> myRoute = new ArrayList<>();
 
         //iniciando ciclo hamiltoniano com 3 vértices, partindo de C000 e retornando ao mesmo...
         for (int i = 0; i <= 2; i++) {
             Route rt = new Route();
 
+            citiesOnRoute[i] = i;
             rt.setInitialVertex(i);
 
             if (i == 2) {
