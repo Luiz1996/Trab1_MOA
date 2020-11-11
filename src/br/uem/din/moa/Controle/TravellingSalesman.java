@@ -92,8 +92,9 @@ public class TravellingSalesman {
         //declarando vetor auxiliar de rota
         totalDistance = 0;
         int remainingCities = (myCities.size() - 3);
+        int newVertexOnTheRoute = 0;
+        int indexToBeChanged = 0;
         int[] citiesOnRoute = new int[myCities.size()];
-        citiesOnRoute[0] = -1;
         List<Route> myRoute;
 
         //inicializando ciclo hamiltoniano com os três primeiros vértices
@@ -102,12 +103,9 @@ public class TravellingSalesman {
         //este for realizará iterações até que todas as cidades sejam inseridas na rota
         for (int newCity = 0; newCity < remainingCities; newCity++) {
             int actualDistance = Integer.MAX_VALUE;
-            int nearestVertex = 0;
-            int newVertexOnTheRoute = 0;
-            int auxiliaryVertex = 0;
 
             //este for percorrerá cada cidade da rota para identificar a nova cidade mais próxima
-            for (Route route : myRoute) {
+            for (int route = 0; route < myRoute.size(); route++) {
 
                 //este for representa a cidade atual, tem como finalidade validar se o mesmo já está na rota e se a distância satisfaz as condições mínimas
                 //pula os índices 0, 1 e 2 pois estes ja estão no ciclo hamiltoniano inicial
@@ -115,12 +113,11 @@ public class TravellingSalesman {
 
                     //validando se a nova cidade deve ou não pertencer à rota
                     if ((citiesOnRoute[actualCity] != actualCity/*Validando se a cidade já não existe na rota*/) &&
-                            (myCities.get(actualCity).getDistancias().get(route.getFinalVertex()) < actualDistance)) {
+                            (myCities.get(actualCity).getDistancias().get(myRoute.get(route).getFinalVertex()) < actualDistance)) {
 
                         //setando informações atualizadas
-                        actualDistance = myCities.get(actualCity).getDistancias().get(route.getFinalVertex());
-                        nearestVertex = route.getInitialVertex();
-                        auxiliaryVertex = route.getFinalVertex();
+                        actualDistance = myCities.get(actualCity).getDistancias().get(myRoute.get(route).getFinalVertex());
+                        indexToBeChanged = route;
                         newVertexOnTheRoute = actualCity;
                     }
                 }
@@ -129,18 +126,15 @@ public class TravellingSalesman {
             //atualizando variáveis
             citiesOnRoute[newVertexOnTheRoute] = newVertexOnTheRoute;
 
-            //obtendo o vertice a ser atualizado, sabemos que a partir dele tudo precisa ser reposicionado
-            int indexToBeChanged = returnsIndexToBeChanged(myRoute, nearestVertex, auxiliaryVertex);
-
-            //atualizando vértice que já existia na rota
-            myRoute.get(indexToBeChanged).setFinalVertex(newVertexOnTheRoute);
-            myRoute.get(indexToBeChanged).setVertexDistances(myCities.get(nearestVertex).getDistancias().get(newVertexOnTheRoute));
-
             //novo vértice que entrará na rota
             Route rt = new Route();
             rt.setInitialVertex(newVertexOnTheRoute);
-            rt.setVertexDistances(myCities.get(newVertexOnTheRoute).getDistancias().get(auxiliaryVertex));
-            rt.setFinalVertex(auxiliaryVertex);
+            rt.setVertexDistances(myCities.get(newVertexOnTheRoute).getDistancias().get(myRoute.get(indexToBeChanged).getFinalVertex()));
+            rt.setFinalVertex(myRoute.get(indexToBeChanged).getFinalVertex());
+
+            //atualizando vértice que já existia na rota
+            myRoute.get(indexToBeChanged).setFinalVertex(newVertexOnTheRoute);
+            myRoute.get(indexToBeChanged).setVertexDistances(myCities.get(myRoute.get(indexToBeChanged).getInitialVertex()).getDistancias().get(newVertexOnTheRoute));
 
             //inserindo o novo vértice na rota e reposicionando(deslocando para a direita) todos os demais
             Route rtAux;
@@ -158,19 +152,6 @@ public class TravellingSalesman {
 
         //Imprimindo resultados
         printRoute_TSP(myRoute, timeToSecond);
-    }
-
-    //este método é responsável por retornar o primeiro índice a ser atualizado, dele em diante todas serão alterados ou reposicionados(deslocamento para direita)
-    //fazendo um for iterando sobre todas as rotas acabou deixando a performance melhor do que ficar atribuindo o índice todas vez que uma distância fosse melhor
-    private int returnsIndexToBeChanged(List<Route> myRoute, int nearestVertex, int auxiliaryVertex) {
-        int findIndex = 0;
-        //percorre todas as rotas encontrando uma aresta que satisfaça as condições de igualdade entre vertice inicial e final
-        for (int index = 0; index < myRoute.size(); index++) {
-            if ((myRoute.get(index).getInitialVertex() == nearestVertex && myRoute.get(index).getFinalVertex() == auxiliaryVertex)) {
-                findIndex = index;
-            }
-        }
-        return findIndex;
     }
 
     //método responsável por iniciar o ciclo contendo as cidades C000, C001 e C002
