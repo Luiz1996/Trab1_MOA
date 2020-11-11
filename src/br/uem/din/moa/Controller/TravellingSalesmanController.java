@@ -1,4 +1,4 @@
-package br.uem.din.moa.Controle;
+package br.uem.din.moa.Controller;
 
 import br.uem.din.moa.Model.City;
 import br.uem.din.moa.Model.Route;
@@ -6,7 +6,7 @@ import br.uem.din.moa.Model.Route;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravellingSalesman {
+public class TravellingSalesmanController {
     final int DEZ = 10;
     final int CEM = 100;
     final int MIL = 1000;

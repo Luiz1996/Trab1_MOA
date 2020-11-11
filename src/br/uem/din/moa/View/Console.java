@@ -1,4 +1,4 @@
-package br.uem.din.moa.Console;
+package br.uem.din.moa.View;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

@@ -1,10 +1,10 @@
-package br.uem.din.moa.Controle;
+package br.uem.din.moa.Controller;
 
 import br.uem.din.moa.Model.City;
 
 import java.util.List;
 
-public class CityControle {
+public class CityController {
     final int DEZ = 10;
     final int CEM = 100;
     final int MIL = 1000;

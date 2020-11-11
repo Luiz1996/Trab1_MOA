@@ -1,9 +1,8 @@
-package br.uem.din.moa.Main;
+package br.uem.din.moa.View;
 
-import br.uem.din.moa.Console.Console;
-import br.uem.din.moa.Controle.TravellingSalesman;
-import br.uem.din.moa.Controle.CityControle;
-import br.uem.din.moa.Controle.File;
+import br.uem.din.moa.Controller.TravellingSalesmanController;
+import br.uem.din.moa.Controller.CityController;
+import br.uem.din.moa.Controller.FileController;
 import br.uem.din.moa.Model.City;
 
 import javax.swing.*;
@@ -15,9 +14,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         List<City> myCities = new ArrayList<>();
-        File fl = new File();
-        CityControle cCtrl = new CityControle();
-        TravellingSalesman tsp = new TravellingSalesman();
+        FileController fl = new FileController();
+        CityController cCtrl = new CityController();
+        TravellingSalesmanController tsp = new TravellingSalesmanController();
 
         int option = Console.showMenu();
         while (option != 0) {

@@ -1,4 +1,4 @@
-package br.uem.din.moa.Controle;
+package br.uem.din.moa.Controller;
 
 import br.uem.din.moa.Model.City;
 
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class File {
+public class FileController {
     Scanner input = new Scanner(System.in);
 
     public List<City> importCities(List<City> myCities){
