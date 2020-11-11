@@ -183,18 +183,20 @@ public class TravellingSalesman {
     private void printRoute_TSP(List<Route> myRoute, long timeToSecond) {
         System.out.println("Rota realizada.: ");
 
-        System.out.println("\t\t\t\t\t+----------------------+");
-        System.out.println("\t\t\t\t\t| INIT || DIST || FINL |");
-        System.out.println("\t\t\t\t\t|------||------||------|");
+        System.out.println("\t\t\t\t\t+------------------------+");
+        System.out.println("\t\t\t\t\t| INIT  || DIST || FINL  |");
+        System.out.println("\t\t\t\t\t|-------||------||-------|");
 
         for (Route route : myRoute) {
             System.out.print("\t\t\t\t\t");
 
             if (route.getInitialVertex() < DEZ) {
-                System.out.print("| C00" + route.getInitialVertex() + " ||");
+                System.out.print("| C00" + route.getInitialVertex() + "  ||");
             } else if (route.getInitialVertex() < CEM) {
-                System.out.print("| C0" + route.getInitialVertex() + " ||");
+                System.out.print("| C0" + route.getInitialVertex() + "  ||");
             } else if (route.getInitialVertex() < MIL) {
+                System.out.print("| C" + route.getInitialVertex() + "  ||");
+            } else {
                 System.out.print("| C" + route.getInitialVertex() + " ||");
             }
 
@@ -209,15 +211,17 @@ public class TravellingSalesman {
             }
 
             if (route.getFinalVertex() < DEZ) {
-                System.out.println(" C00" + route.getFinalVertex() + " |");
+                System.out.println(" C00" + route.getFinalVertex() + "  |");
             } else if (route.getFinalVertex() < CEM) {
-                System.out.println(" C0" + route.getFinalVertex() + " |");
+                System.out.println(" C0" + route.getFinalVertex() + "  |");
             } else if (route.getFinalVertex() < MIL) {
+                System.out.println(" C" + route.getFinalVertex() + "  |");
+            } else {
                 System.out.println(" C" + route.getFinalVertex() + " |");
             }
             totalDistance += route.getVertexDistances();
         }
-        System.out.println("\t\t\t\t\t+----------------------+");
+        System.out.println("\t\t\t\t\t+------------------------+");
         System.out.println("Distância Total: " + totalDistance);
         System.out.println("Tempo de execução em segundos: " + timeToSecond + "s.");
     }
