@@ -1,5 +1,6 @@
 package br.uem.din.moa.Console;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Console {
@@ -20,6 +21,11 @@ public class Console {
         System.out.println("|  00) Sair                                     |");
         System.out.println("+-----------------------------------------------+");
         System.out.print("Opcao: ");
-        return in.nextInt();
+
+        try{
+            return in.nextInt();
+        }catch (InputMismatchException ie){
+            return -1;
+        }
     }
 }
