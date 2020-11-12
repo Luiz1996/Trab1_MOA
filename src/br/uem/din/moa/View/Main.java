@@ -14,9 +14,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         List<City> myCities = new ArrayList<>();
-        FileController fl = new FileController();
-        CityController cCtrl = new CityController();
-        TravellingSalesmanController tsp = new TravellingSalesmanController();
+        FileController fileController = new FileController();
+        CityController cityController = new CityController();
+        TravellingSalesmanController travellingSalesmanController = new TravellingSalesmanController();
 
         int option = Console.showMenu();
         while (option != 0) {
@@ -26,19 +26,19 @@ public class Main {
                     if(myCities.size() > 0){
                         JOptionPane.showMessageDialog(null, "Para reimportar as cidades, use a Opção 5 e resete as informações.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }else{
-                        myCities = fl.importCities(myCities);
+                        myCities = fileController.importCities(myCities);
                     }
                     break;
                 case 2:
                     if(myCities.size() > 0){
-                        cCtrl.printCities(myCities);
+                        cityController.printCities(myCities);
                     }else{
                         JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
                     break;
                 case 3:
                     if(myCities.size() > 0){
-                        tsp.nearestNeighborHeuristic_TSP(myCities);
+                        travellingSalesmanController.nearestNeighborHeuristicTSP(myCities);
                     }else{
                         JOptionPane.showMessageDialog(null, "Use a Opção 1 para importar as cidades na aplicação.", "Falha", JOptionPane.ERROR_MESSAGE);
                     }
@@ -46,7 +46,7 @@ public class Main {
                 case 4:
                     if(myCities.size() > 0){
                         if(myCities.size() > 2){
-                            tsp.nearestInsertionHeuristic_TSP(myCities);
+                            travellingSalesmanController.nearestInsertionHeuristicTSP(myCities);
                         }else{
                             JOptionPane.showMessageDialog(null, "Para gerar o ciclo Hamiltoniano inicial, o arquivo deve conter ao menos 3 cidades!", "Falha", JOptionPane.ERROR_MESSAGE);
                         }
@@ -59,7 +59,7 @@ public class Main {
                     JOptionPane.showMessageDialog(null, "As cidades foram apagadas com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
                     break;
                 case 6:
-                    fl.makeCitiesFile();
+                    fileController.makeCitiesFile();
                     Console.cleanDisplay();
                     break;
                 default:
