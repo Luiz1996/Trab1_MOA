@@ -10,7 +10,7 @@ public class Console {
     }
 
     public static int showMenu() {
-        Scanner in = new Scanner(System.in);
+        Scanner input = new Scanner(System.in);
         System.out.println("+--- Menu do Problema do Caixeiro Viajante -----+");
         System.out.println("|  01) Importar Cidades                         |");
         System.out.println("|  02) Imprimir Cidades                         |");
@@ -23,7 +23,7 @@ public class Console {
         System.out.print("Opcao: ");
 
         try{
-            return in.nextInt();
+            return input.nextInt();
         }catch (InputMismatchException ie){
             return -1;
         }

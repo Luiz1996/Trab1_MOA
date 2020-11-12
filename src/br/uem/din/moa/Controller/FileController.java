@@ -14,25 +14,25 @@ public class FileController {
     Scanner input = new Scanner(System.in);
 
     public List<City> importCities(List<City> myCities){
-        String pathArq;
+        String pathFile;
         City actualCity = new City();
 
-        JFileChooser file = new JFileChooser();
-        file.setFileFilter(new FileNameExtensionFilter("Texto (*.txt)", "txt"));
-        file.showDialog(file, "Abrir arquivo texto");
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Texto (*.txt)", "txt"));
+        fileChooser.showDialog(fileChooser, "Abrir arquivo texto");
 
         try{
-            pathArq = file.getSelectedFile().toString().trim();
+            pathFile = fileChooser.getSelectedFile().toString().trim();
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, "Nenhum arquivo foi selecionado ou arquivo inválido.", "Falha", JOptionPane.ERROR_MESSAGE);
             return myCities;
         }
 
         //abrindo arquivo para leitura
-        try (BufferedReader br = new BufferedReader(new FileReader(pathArq))){
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(pathFile))){
 
             //obtendo dados da primeira linha do arquivo texto
-            String completeLine = br.readLine().trim();
+            String completeLine = bufferedReader.readLine().trim();
             String[] distances = completeLine.split(",");
 
             //setando dados da primeira linha
@@ -49,7 +49,7 @@ public class FileController {
                 actualCity = new City();
 
                 //obtendo dados das demais linhas
-                completeLine = br.readLine().trim();
+                completeLine = bufferedReader.readLine().trim();
                 distances = completeLine.split(",");
 
                 //setando dados das demais linhas
