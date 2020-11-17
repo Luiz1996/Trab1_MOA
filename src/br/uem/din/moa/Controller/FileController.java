@@ -89,11 +89,13 @@ public class FileController {
 
         try {
             maxDistanceValue = input.nextInt();
-            maxDistanceValue++;
         } catch (InputMismatchException e) {
             JOptionPane.showMessageDialog(null, "O valor informado é inválido.", "Falha", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
+        System.out.println("numberOfCities: " + numberOfCities);
+        System.out.println("maxDistanceValue: " + maxDistanceValue);
 
         //realizando validações para garantir que algum dado será gerado, contudo, que não atrapalhe a formatação
         if(numberOfCities > 999 || maxDistanceValue > 9999 || numberOfCities <= 0 || maxDistanceValue <= 0){
@@ -108,7 +110,7 @@ public class FileController {
         for(int  i = 0; i < numberOfCities; i++){
             for(int j = (i + 1); j < numberOfCities; j++){
                 if(i != j){
-                    distanceRandom = random.nextInt(maxDistanceValue);
+                    distanceRandom = random.nextInt(maxDistanceValue + 1);
 
                     //distância zero deve ser permitida somente quando i == j
                     if(distanceRandom == 0){
