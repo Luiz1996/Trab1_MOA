@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TravellingSalesmanController {
+    final int ZERO = 0;
     final int TEN = 10;
     final int HUNDRED = 100;
     final int THOUSAND = 1000;
@@ -42,15 +43,15 @@ public class TravellingSalesmanController {
             List<Integer> neighbors = myCities.get(actual).getDistancias();
 
             //variáveis auxiliares
-            int bestNeighbor = 0;
+            int bestNeighbor = ZERO;
             int bestDistance = Integer.MAX_VALUE;
 
             //para cada cidade vizinha da cidade atual, partindo de C000
-            for (int currentNeighbor = 0; currentNeighbor < neighbors.size(); currentNeighbor++) {
+            for (int currentNeighbor = ZERO; currentNeighbor < neighbors.size(); currentNeighbor++) {
                 int actualDistance = neighbors.get(currentNeighbor);
 
                 if ((citiesOnRoute[currentNeighbor] != currentNeighbor/*Validando se a cidade já não existe na rota*/) &&
-                        (actualDistance > 0) &&
+                        (actualDistance > ZERO) &&
                         (actualDistance < bestDistance)) {
                     bestNeighbor = currentNeighbor;
                     bestDistance = actualDistance;
@@ -71,12 +72,12 @@ public class TravellingSalesmanController {
 
         //terminando de setar informações na última cidade da rota
         lastPosition = (myRoutes.size() - 1);
-        myRoutes.get(lastPosition).setFinalVertex(0);
+        myRoutes.get(lastPosition).setFinalVertex(ZERO);
         myRoutes.get(lastPosition).setVertexDistances(myCities.get(myRoutes.get(lastPosition).getFinalVertex()).getDistancias().get(myRoutes.get(lastPosition).getInitialVertex()));
 
         //imprimindo tempo de execução
         finalTime = System.currentTimeMillis();
-        timeToSecond = ((finalTime - initTime) / 1000);
+        timeToSecond = ((finalTime - initTime) / THOUSAND);
 
         //Imprimindo resultados
         printRouteTSP(myRoutes, timeToSecond);
@@ -91,25 +92,23 @@ public class TravellingSalesmanController {
 
         //variáveis auxiliares
         totalDistance = 0;
-        int remainingCities = (myCities.size() - 3);
         int newVertexOnTheRoute = 0;
         int indexToBeChanged = 0;
         int[] citiesOnRoute = new int[myCities.size()];
-        List<Route> myRoutes;
-
-        //inicializando ciclo hamiltoniano com os três primeiros vértices
-        myRoutes = startRoute_C000_C001_C002(myCities, citiesOnRoute);
+        List<Route> myRoutes = startRoute_C000_C001_C002(myCities, citiesOnRoute); //inicializando ciclo hamiltoniano com os três primeiros vértices
+        int remainingCities = (myCities.size() - myRoutes.size());
+        int initialCycleSize = myRoutes.size();
 
         //este for realizará iterações até que todas as cidades sejam inseridas na rota
-        for (int newCity = 0; newCity < remainingCities; newCity++) {
+        for (int newCity = ZERO; newCity < remainingCities; newCity++) {
             int actualDistance = Integer.MAX_VALUE;
 
             //este for percorrerá cada cidade da rota para identificar a nova cidade mais próxima
-            for (int route = 0; route < myRoutes.size(); route++) {
+            for (int route = ZERO; route < myRoutes.size(); route++) {
 
                 //este for representa a cidade atual, tem como finalidade validar se o mesmo já está na rota e se a distância satisfaz as condições mínimas
                 //pula os índices 0, 1 e 2 pois estes ja estão no ciclo hamiltoniano inicial
-                for (int actualCity = 3; actualCity < myCities.size(); actualCity++) {
+                for (int actualCity = initialCycleSize; actualCity < myCities.size(); actualCity++) {
 
                     //validando se a nova cidade deve ou não pertencer à rota
                     if ((citiesOnRoute[actualCity] != actualCity/*Validando se a cidade já não existe na rota*/) &&
@@ -148,7 +147,7 @@ public class TravellingSalesmanController {
 
         //imprimindo tempo de execução
         finalTime = System.currentTimeMillis();
-        timeToSecond = ((finalTime - initTime) / 1000);
+        timeToSecond = ((finalTime - initTime) / THOUSAND);
 
         //Imprimindo resultados
         printRouteTSP(myRoutes, timeToSecond);
