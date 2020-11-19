@@ -89,7 +89,7 @@ public class TravellingSalesmanController {
 
         initTime = System.currentTimeMillis();
 
-        //declarando vetor auxiliar de rota
+        //variáveis auxiliares
         totalDistance = 0;
         int remainingCities = (myCities.size() - 3);
         int newVertexOnTheRoute = 0;
