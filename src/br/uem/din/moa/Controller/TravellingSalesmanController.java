@@ -163,8 +163,6 @@ public class TravellingSalesmanController {
 
         //Imprimindo resultados
         printRouteTSP(myRoutes, timeToSecond);
-
-        //return myRoutes;
     }
 
     private List<Route> copyRoute(List<Route> routeOriginal){
