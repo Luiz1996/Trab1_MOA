@@ -25,7 +25,6 @@ public class TravellingSalesmanController {
         initTime = System.currentTimeMillis();
 
         //variáveis auxiliares
-        totalDistance = 0;
         int actual = 0;
         int lastPosition;
         int[] citiesOnRoute = new int[(myCities.size() + 1)];
@@ -91,9 +90,7 @@ public class TravellingSalesmanController {
         initTime = System.currentTimeMillis();
 
         //variáveis auxiliares
-        totalDistance = 0;
         int newVertexOnTheRoute = 0;
-        int indexToBeChanged = 0;
         int[] citiesOnRoute = new int[myCities.size()];
         List<Route> myRoutes = startRoute_C000_C001_C002(myCities, citiesOnRoute); //inicializando ciclo hamiltoniano com os três primeiros vértices
         int remainingCities = (myCities.size() - myRoutes.size());
@@ -104,7 +101,7 @@ public class TravellingSalesmanController {
             int actualDistance = Integer.MAX_VALUE;
 
             //este for percorrerá cada cidade da rota para identificar a nova cidade mais próxima
-            for (int route = ZERO; route < myRoutes.size(); route++) {
+            for (Route myRoute : myRoutes) {
 
                 //este for representa a cidade atual, tem como finalidade validar se o mesmo já está na rota e se a distância satisfaz as condições mínimas
                 //pula os índices 0, 1 e 2 pois estes ja estão no ciclo hamiltoniano inicial
@@ -112,37 +109,52 @@ public class TravellingSalesmanController {
 
                     //validando se a nova cidade deve ou não pertencer à rota
                     if ((citiesOnRoute[actualCity] != actualCity/*Validando se a cidade já não existe na rota*/) &&
-                            (myCities.get(actualCity).getDistancias().get(myRoutes.get(route).getFinalVertex()) < actualDistance)) {
+                            (myCities.get(actualCity).getDistancias().get(myRoute.getFinalVertex()) < actualDistance)) {
 
                         //setando informações atualizadas
-                        actualDistance = myCities.get(actualCity).getDistancias().get(myRoutes.get(route).getFinalVertex());
-                        indexToBeChanged = route;
+                        actualDistance = myCities.get(actualCity).getDistancias().get(myRoute.getFinalVertex());
                         newVertexOnTheRoute = actualCity;
                     }
                 }
             }
 
-            //atualizando variáveis
+            //atualizando vetor de cidades que já entraram na rota
             citiesOnRoute[newVertexOnTheRoute] = newVertexOnTheRoute;
 
-            //novo vértice que entrará na rota
-            Route route = new Route();
-            route.setInitialVertex(newVertexOnTheRoute);
-            route.setVertexDistances(myCities.get(newVertexOnTheRoute).getDistancias().get(myRoutes.get(indexToBeChanged).getFinalVertex()));
-            route.setFinalVertex(myRoutes.get(indexToBeChanged).getFinalVertex());
+            //adicionando nova cidade na rota
+            int beforeCost = Integer.MAX_VALUE, routeSize = myRoutes.size(), actualCost;
+            List<Route> bestRoute = new ArrayList<>();
+            for(int routePossibility = ZERO; routePossibility < routeSize; routePossibility++){
+                List<Route> routeCopy = copyRoute(myRoutes);
 
-            //atualizando vértice que já existia na rota
-            myRoutes.get(indexToBeChanged).setFinalVertex(newVertexOnTheRoute);
-            myRoutes.get(indexToBeChanged).setVertexDistances(myCities.get(myRoutes.get(indexToBeChanged).getInitialVertex()).getDistancias().get(newVertexOnTheRoute));
+                //inserindo novo vertice
+                Route route = new Route();
+                route.setInitialVertex(routeCopy.get(routePossibility).getInitialVertex());
+                route.setFinalVertex(newVertexOnTheRoute);
+                route.setVertexDistances(myCities.get(newVertexOnTheRoute).getDistancias().get(route.getInitialVertex()));
 
-            //inserindo o novo vértice na rota e reposicionando(deslocando para a direita) todos os demais
-            Route routeAux;
-            for (int i = (indexToBeChanged + 1); i < myRoutes.size(); i++) {
-                routeAux = myRoutes.get(i);
-                myRoutes.set(i, route);
-                route = routeAux;
+                //atualizando vertice que já existia
+                routeCopy.get(routePossibility).setInitialVertex(newVertexOnTheRoute);
+                routeCopy.get(routePossibility).setVertexDistances(myCities.get(routeCopy.get(routePossibility).getFinalVertex()).getDistancias().get(newVertexOnTheRoute));
+
+                //posicionando cidades nas posições corretas
+                //realizando descolamentos para a direita
+                Route routeAux;
+                for (int positioningARoute = routePossibility; positioningARoute < routeSize; positioningARoute++) {
+                    routeAux = routeCopy.get(positioningARoute);
+                    routeCopy.set(positioningARoute, route);
+                    route = routeAux;
+                }
+                routeCopy.add(route);
+
+                //validando custo da atual rota
+                actualCost = getRouteCost(routeCopy);
+                if(actualCost < beforeCost){
+                    bestRoute = routeCopy;
+                    beforeCost = actualCost;
+                }
             }
-            myRoutes.add(route);
+            myRoutes = bestRoute;
         }
 
         //imprimindo tempo de execução
@@ -151,6 +163,34 @@ public class TravellingSalesmanController {
 
         //Imprimindo resultados
         printRouteTSP(myRoutes, timeToSecond);
+
+        //return myRoutes;
+    }
+
+    private List<Route> copyRoute(List<Route> routeOriginal){
+        List<Route> routeCopied = new ArrayList<>();
+
+        for (Route route : routeOriginal) {
+            Route rt = new Route();
+
+            rt.setInitialVertex(route.getInitialVertex());
+            rt.setVertexDistances(route.getVertexDistances());
+            rt.setFinalVertex(route.getFinalVertex());
+
+            routeCopied.add(rt);
+        }
+
+        return routeCopied;
+    }
+
+    private int getRouteCost(List<Route> myRoute){
+        int totalRouteCost = 0;
+
+        for(Route route: myRoute){
+            totalRouteCost += route.getVertexDistances();
+        }
+
+        return totalRouteCost;
     }
 
     //método responsável por iniciar o ciclo contendo as cidades C000, C001 e C002
@@ -180,6 +220,8 @@ public class TravellingSalesmanController {
 
     //imprimindo a rota com a formatação adequada
     private void printRouteTSP(List<Route> myRoutes, long timeToSecond) {
+        totalDistance = 0;
+
         System.out.println("Rota realizada.: ");
 
         System.out.println("\t\t\t\t\t+------------------------+");
